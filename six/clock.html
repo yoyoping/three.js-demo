@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0px;
+      background-color: #000000;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body onload="start()">
+  <script src="../js/three.52.js"></script>
+  <script src="../js/clock.js"></script>
+  <script>
+    let camera, scene, renderer, mesh, texture;
+    const start = () => {
+      clock(); // 执行之前的时钟
+      init(); // 初始化
+      animate(); // 动画循环
+    }
+
+    // 初始化
+    const init = () => {
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild(renderer.domElement);
+
+      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 400;
+
+      scene = new THREE.Scene();
+
+      const geometry = new THREE.CubeGeometry(150, 150, 150);
+
+      texture = new THREE.Texture(canvas);
+
+      const meterial = new THREE.MeshBasicMaterial({
+        map: texture
+      });
+
+      mesh = new THREE.Mesh(geometry, meterial);
+
+      scene.add (mesh);
+
+      window.addEventListener('resize', onWindowResize, false);
+
+    }
+
+    // 拖动窗口
+    const onWindowResize = () => {
+      debugger
+      camera.aspect = window.clentWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // 循环动画函数
+    const animate = () => {
+      texture.needsUpdate = true;
+      mesh.rotation.y -= 0.01;
+      mesh.rotation.x -= 0.01;
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+
+</html>

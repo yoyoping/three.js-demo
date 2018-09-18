@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #canvas-frame{
+      width: 100%;
+      height: 600px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-frame"></div>
+  <script src="../js/three.js"></script>
+  <script>
+    // 初始化three
+    let renderer;
+    const initThree = () => {
+      width = document.getElementById('canvas-frame').clientWidth;
+      height = document.getElementById('canvas-frame').clientHeight;
+      renderer = new THREE.WebGLRenderer({
+        antialias: true
+      });
+      renderer.setSize(width, height);
+      document.getElementById('canvas-frame').appendChild(renderer.domElement);
+      renderer.setClearColor(0xffffff, 1.0);
+    }
+
+    // 初始化相机
+    let camera;
+    const initCamera = () => {
+      camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
+      camera.position.x = 0;
+      camera.position.y = 0;
+      camera.position.z = 600;
+      camera.up.x = 0;
+      camera.up.y = 1;
+      camera.up.z = 0;
+      camera.lookAt({
+        x: 0,
+        y: 0,
+        z: 0
+      })
+    }
+    
+    // 初始化场景
+    let scene;
+    const initScene = () => {
+      scene = new THREE.Scene();
+    }
+
+    let light;
+    const initLight = () => {
+      light = new THREE.AmbientLight(0xFFFFFF);
+      light.position.set(100, 100, 200);
+      scene.add(light);
+      light = new THREE.PointLight(0x00FF00);
+      light.position.set(0, 0, 300);
+      scene.add(light);
+    }
+
+    // 初始物体对象
+    let cube;
+    const initObject = () => {
+      const geometry = new THREE.CylinderGeometry(100, 150, 400);
+      const material = new THREE.MeshLambertMaterial({ color: 0xFFFF00 });
+      const mesh = new THREE.Mesh( geometry, material );
+      mesh.position = new THREE.Vector3(0,0,0);
+      scene.add (mesh)
+    }
+
+    // 开始执行
+    const threeStart = () => {
+      initThree();
+      initCamera();
+      initScene();
+      initLight();
+      initObject();
+      animation(); // 动画循环
+    }
+
+    // 循环动画
+    const animation = () => {
+      camera.position.x += 1; // 每次向左移动1px
+      renderer.render(scene, camera);
+      requestAnimationFrame(animation)
+    }
+    window.onload = threeStart
+  </script>
+</body>
+</html>
